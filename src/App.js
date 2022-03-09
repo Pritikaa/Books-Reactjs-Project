@@ -18,7 +18,6 @@ import MainHeader from "./compomnents/MainHeader";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 
-import userProfile from "./compomnents/Profile/UserProfile";
 import AuthPage from "./pages/AuthPage";
 import AuthContext from "./store/auth-context";
 import UserProfile from "./compomnents/Profile/UserProfile";
@@ -66,23 +65,22 @@ function App() {
     setIsLoading(false);
   }, []);
 
-  const allCategories = ["all", ...new Set(books.map((item) => item.category))];
+  //const allCategories = ["all", ...new Set(books.map((item) => item.category))];
   // console.log(allCategories);
   // const [categories, setCategories] = useState(allCategories);
   // console.log(categories);
 
-  function fetchbookonclick() {
-    fetchBooksHandler();
-    //filterItems('all');
-  }
+  // function fetchbookonclick() {
+  //   fetchBooksHandler();
+  //   //filterItems('all');
+  // }
 
   useEffect(() => {
     fetchBooksHandler();
   }, [fetchBooksHandler]);
 
   const [menuBookItems, setMenuBookItems] = useState(books);
-  const [firstReload, setFirstReload] = useState(false);
-
+  
   const filterItems = (category) => {
     fetchBooksHandler();
     if (category === "all") {
@@ -100,13 +98,6 @@ function App() {
     filterItems("all");
     filterItems(category);
   };
-
-  // useEffect(() => {
-  //   fetchBooksHandler();
-  //   setFirstReload(true);
-  //   filterItems("all");
-  //   //setFirstReload(false);
-  // }, []);
 
   async function addBookHandler(book) {
     const response = await fetch(
@@ -146,12 +137,6 @@ function App() {
     content = <p>Loading...</p>;
   }
 
-  const fetchbooks = () => {
-    if (authCtx.isLoggedIn) {
-      fetchBooksHandler();
-    }
-  };
-  
   return (
     <main>
       <section className="menu section">

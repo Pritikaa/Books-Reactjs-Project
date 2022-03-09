@@ -1,5 +1,5 @@
 import { NavLink, Link } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import classes from "./MainHeader.module.css";
 import AuthContext from "../store/auth-context";
 
@@ -15,11 +15,9 @@ const MainHeader = (props) => {
     authCtx.logout();
   };
 
-  const [handler, setHandler] = useState(false);
-
   const showBookHandler = () => {
     props.fetchBooksHandler();
-    setHandler(true);
+   
   };
 
   return (
