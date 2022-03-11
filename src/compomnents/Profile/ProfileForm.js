@@ -29,12 +29,10 @@ const ProfileForm = () => {
       }
     }).then( res => {
       //assumption: Always succeed!
-
-      history.replace('/'); 
+      authCtx.logout();
+      // history.replace('/'); 
     });
-
   };
-
 
   return (
     <form onSubmit={submitHandler} className={classes.form}>

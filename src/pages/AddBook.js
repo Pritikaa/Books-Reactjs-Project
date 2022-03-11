@@ -99,15 +99,16 @@ function AddBook(props) {
       />
       {/* <Prompt when={!isEntering} message={() => "You filled the form...!!"}/> */}
       <div className="title">
-              <h2>Add Books</h2>
-              <div className="underline"></div>
-            </div>
+        <h2>Add Books</h2>
+        <div className="underline"></div>
+      </div>
       <div>
         <form onFocus={formFocusHandler} onSubmit={submitHandler}>
           <div className=" control">
             <label>Title</label>
             <input
               type="text"
+              required
               id="title"
               ref={bookTitleRef}
               value={enteredTitle}
@@ -121,6 +122,7 @@ function AddBook(props) {
             <label>Category</label>
             <input
               type="text"
+              required
               id="category"
               ref={bookCategoryRef}
               value={enteredCat}
@@ -134,6 +136,7 @@ function AddBook(props) {
             <label>Price</label>
             <input
               type="text"
+              required
               id="book-price"
               ref={bookPriceRef}
               value={enteredPrice}
@@ -145,13 +148,14 @@ function AddBook(props) {
           </div>
           <div className="control">
             <label>Upload Image</label>
-            <input type="file" name="image" ref={bookImageRef} />
+            <input type="url" required name="image" ref={bookImageRef} />
           </div>
           <div className=" control">
             <label>Description</label>
             <textarea
               rows="5"
               type="text"
+              required
               id="description"
               ref={descriptionRef}
               value={enteredDesc}

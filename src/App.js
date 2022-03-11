@@ -6,21 +6,26 @@ import React, {
   useCallback,
   Fragment,
   useContext,
+  Suspense,
 } from "react";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
-
-import "./App.css";
-import Categories from "./Categories";
-import Menu from "./pages/Menu";
-import AddBook from "./pages/AddBook";
-import BookDetail from "./pages/BookDetail";
-import MainHeader from "./compomnents/MainHeader";
-import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
 
 import AuthPage from "./pages/AuthPage";
 import AuthContext from "./store/auth-context";
 import UserProfile from "./compomnents/Profile/UserProfile";
+
+import "./App.css";
+
+import Home from "./pages/Home";
+import MainHeader from "./compomnents/MainHeader";
+
+const AddBook = React.lazy(() => import("./pages/AddBook"));
+const Categories = React.lazy(() => import("./Categories"));
+const Menu = React.lazy(() => import("./pages/Menu"));
+const BookDetail = React.lazy(() => import("./pages/BookDetail"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
+
+
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -80,7 +85,7 @@ function App() {
   }, [fetchBooksHandler]);
 
   const [menuBookItems, setMenuBookItems] = useState(books);
-  
+
   const filterItems = (category) => {
     fetchBooksHandler();
     if (category === "all") {
@@ -143,61 +148,63 @@ function App() {
         <header className="App-header">
           <MainHeader fetchBooksHandler={fetchBooksHandler} />
         </header>
-        <Switch>
-          <Route path="/" exact>
-            <Redirect to="/home" />
-          </Route>
-          <Route path="/home" exact>
-            <Home />
-          </Route>
-          {!authCtx.isLoggedIn && (
-            <Route path="/auth">
-              <AuthPage />
+        <Suspense fallback={ <p>Loading...!!!</p> }>
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to="/home" />
             </Route>
-          )}
-          <Route path="/addbook">
-            {authCtx.isLoggedIn && (
-              <AddBook
-                onAddBook={addBookHandler}
-                fetchBooks={fetchBooksHandler}
-                filterItems={filterItems}
-              />
+            <Route path="/home" exact>
+              <Home />
+            </Route>
+            {!authCtx.isLoggedIn && (
+              <Route path="/auth">
+                <AuthPage />
+              </Route>
             )}
-            {!authCtx.isLoggedIn && <Redirect to="/auth" />}
-          </Route>
-          <Route path="/profile">
-            {authCtx.isLoggedIn && <UserProfile />}
-            {!authCtx.isLoggedIn && <Redirect to="/auth" />}
-          </Route>
-          <Route path="/books" exact>
-            {authCtx.isLoggedIn && (
-              <Fragment>
-                {/* <button
+            <Route path="/addbook">
+              {authCtx.isLoggedIn && (
+                <AddBook
+                  onAddBook={addBookHandler}
+                  fetchBooks={fetchBooksHandler}
+                  filterItems={filterItems}
+                />
+              )}
+              {!authCtx.isLoggedIn && <Redirect to="/auth" />}
+            </Route>
+            <Route path="/profile">
+              {authCtx.isLoggedIn && <UserProfile />}
+              {!authCtx.isLoggedIn && <Redirect to="/auth" />}
+            </Route>
+            <Route path="/books" exact>
+              {authCtx.isLoggedIn && (
+                <Fragment>
+                  {/* <button
                 type="button"
                 className="filter-btn fetch-book-btn"
                 onClick={fetchbookonclick}
               >
                 Fetch books
               </button> */}
-                <Categories
-                  books={books}
-                  fetchBooks={fetchBooksHandler}
-                  filterItems={filterItems}
-                  passUp={passUpHandler}
-                />
-                {content}
-              </Fragment>
-            )}
-            {!authCtx.isLoggedIn && <Redirect to="/auth" />}
-          </Route>
-          <Route path="/books/:bookId">
-            {authCtx.isLoggedIn && <BookDetail books={books} />}
-            {!authCtx.isLoggedIn && <Redirect to="/auth" />}
-          </Route>
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch>
+                  <Categories
+                    books={books}
+                    fetchBooks={fetchBooksHandler}
+                    filterItems={filterItems}
+                    passUp={passUpHandler}
+                  />
+                  {content}
+                </Fragment>
+              )}
+              {!authCtx.isLoggedIn && <Redirect to="/auth" />}
+            </Route>
+            <Route path="/books/:bookId">
+              {authCtx.isLoggedIn && <BookDetail books={books} />}
+              {!authCtx.isLoggedIn && <Redirect to="/auth" />}
+            </Route>
+            <Route path="*">
+              <NotFound />
+            </Route>
+          </Switch>
+        </Suspense>
       </section>
     </main>
   );
