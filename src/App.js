@@ -25,15 +25,26 @@ const Menu = React.lazy(() => import("./pages/Menu"));
 const BookDetail = React.lazy(() => import("./pages/BookDetail"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-
-
 function App() {
   const authCtx = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [books, setBooks] = useState([]);
+  const [menuBookItems, setMenuBookItems] = useState(books);
   const history = useHistory();
+  const allCategories = [
+    "all",
+    "Self-help",
+    "Thriller",
+    "Historical",
+    "Fiction",
+    "Mystery",
+    "Horror",
+    "Romance",
+    "Historical",
+    "Others",
+  ];
 
   const fetchBooksHandler = useCallback(async () => {
     setError(null);
@@ -63,28 +74,15 @@ function App() {
       }
 
       setBooks(loadedBooks);
-      //console.log(books);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
   }, []);
 
-  //const allCategories = ["all", ...new Set(books.map((item) => item.category))];
-  // console.log(allCategories);
-  // const [categories, setCategories] = useState(allCategories);
-  // console.log(categories);
-
-  // function fetchbookonclick() {
-  //   fetchBooksHandler();
-  //   //filterItems('all');
-  // }
-
   useEffect(() => {
     fetchBooksHandler();
   }, [fetchBooksHandler]);
-
-  const [menuBookItems, setMenuBookItems] = useState(books);
 
   const filterItems = (category) => {
     fetchBooksHandler();
@@ -100,8 +98,11 @@ function App() {
 
   const passUpHandler = (category) => {
     fetchBooksHandler();
-    filterItems("all");
-    filterItems(category);
+    if (category) {
+      filterItems(category);
+    } else {
+      filterItems("all");
+    }
   };
 
   async function addBookHandler(book) {
@@ -116,10 +117,9 @@ function App() {
       }
     );
 
-    const data = await response.json();
-    console.log(data);
-
-    history.push("/books");
+    await response.json().then(() => {
+      history.push("/books");
+    });
   }
 
   let content = <p>No Books Found...</p>;
@@ -127,9 +127,10 @@ function App() {
   if (books.length > 0) {
     content = (
       <Menu
-        items={menuBookItems}
+        items={menuBookItems.length > 0 ? menuBookItems : books}
         fetchBooks={fetchBooksHandler}
         filterItems={filterItems}
+        allCategories={allCategories}
       />
     );
   }
@@ -148,7 +149,7 @@ function App() {
         <header className="App-header">
           <MainHeader fetchBooksHandler={fetchBooksHandler} />
         </header>
-        <Suspense fallback={ <p>Loading...!!!</p> }>
+        <Suspense fallback={<p>Loading...!!!</p>}>
           <Switch>
             <Route path="/" exact>
               <Redirect to="/home" />
@@ -179,12 +180,12 @@ function App() {
               {authCtx.isLoggedIn && (
                 <Fragment>
                   {/* <button
-                type="button"
-                className="filter-btn fetch-book-btn"
-                onClick={fetchbookonclick}
-              >
-                Fetch books
-              </button> */}
+                    type="button"
+                    className="filter-btn fetch-book-btn"
+                    onClick={fetchbookonclick}
+                  >
+                    Fetch books
+                  </button> */}
                   <Categories
                     books={books}
                     fetchBooks={fetchBooksHandler}

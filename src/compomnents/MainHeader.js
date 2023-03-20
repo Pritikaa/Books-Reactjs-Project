@@ -9,7 +9,6 @@ const MainHeader = (props) => {
   const isLoggedIn = authCtx.isLoggedIn;
 
   if(authCtx.isLoggedIn) {
-      console.log("hello");
   }
   const logoutHandler = () => {
     authCtx.logout();

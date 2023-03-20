@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SingleBook from "../compomnents/SingleBook";
 
 const Menu = (props) => {
-
-  
   return (
     <div className="section-center">
       {props.items.map((menuItem) => {

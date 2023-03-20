@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 import AuthContext from "../../store/auth-context";
 import classes from "./AuthForm.module.css";
@@ -44,7 +44,7 @@ const AuthForm = () => {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         setIsLoading(false);
         if (res.ok) {
           return res.json();
@@ -61,13 +61,11 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        //console.log(data);
-
         const expirationTime = new Date(
           new Date().getTime() + +data.expiresIn * 1000
         ); // data.expiresIn gives string. therefore to convert it into number we add '+' in front of it
         authCtx.login(data.idToken, expirationTime.toISOString());
-        history.replace('/');
+        history.replace("/");
       })
       .catch((err) => {
         alert(err.message);

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Route, Redirect, Link, Prompt } from "react-router-dom";
+import { Prompt } from "react-router-dom";
 
 function AddBook(props) {
   const bookTitleRef = useRef("");
@@ -18,7 +18,6 @@ function AddBook(props) {
   const [isEntering, setIsEntering] = useState(false);
 
   function titleChangeHandler(event) {
-    console.log(event.target);
     setEnteredTitle(event.target.value);
   }
 
@@ -39,26 +38,22 @@ function AddBook(props) {
 
     if (enteredTitle.trim() === "") {
       setBookTitleValid(false);
-      console.log(bookTitleRef);
-      console.log("added");
+
       return;
     }
 
     if (enteredCat.trim() === "") {
       setBookCatValid(false);
-      console.log("added");
       return;
     }
 
     if (enteredPrice.trim() === "") {
       setBookPriceValid(false);
-      console.log("added");
       return;
     }
 
     if (enteredDesc.trim() === "") {
       setBookDescValid(false);
-      console.log("added");
       return;
     }
 
@@ -76,7 +71,6 @@ function AddBook(props) {
     };
 
     props.onAddBook(book);
-    console.log("added");
     props.filterItems("all");
   }
 

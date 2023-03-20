@@ -2,10 +2,8 @@ import { useParams } from "react-router-dom";
 
 const BookDetail = (props) => {
   const params = useParams();
-  console.log("in bookdetail");
   const book = props.books.find((book) => book.id === params.bookId);
 
-  console.log(book);
   if (!book) {
     return <p>No Such Book Found !</p>;
   }
